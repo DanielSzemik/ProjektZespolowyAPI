@@ -1,6 +1,6 @@
 "# ProjektZespolowyAPI"
 
-Get Reguły - zwracy json z wszystkimi regułami  
+Get Reguły - zwraca json z wszystkimi regułami  
 http://localhost:8080/RestExample/resources/clips/clipsFilePath  
 przykładowy zwracany JSON: https://pastebin.com/aCrK5FjN?fbclid=IwAR273FNObT6ol5wkqShN4I_s6rV0nCRjqPwmqk77_xxagyAHTEQtHqF4GyA  
 przykład wykorzysztania:  
