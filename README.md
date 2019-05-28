@@ -18,4 +18,4 @@ przykład wykorzystania:
 curl -d "{"""attrName1""":"""preferred-body""","""attr1""":"""stuka""","""attrName2""":"""best-body""","""attr2""":"""stuka""","""certainty""":30}" -H "Content-Type: application/json" -X POST http://localhost:8080/RestExample/resources/clips/delete  
   
 Sprawdź pod jaką ścieżką server szuka pliku clipsowego  
-http://localhost:8080/RestExample/resouarces/clips/path  
+http://localhost:8080/RestExample/resouarces/clips/clipsFilePath  
