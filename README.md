@@ -1,4 +1,4 @@
-"# ProjektZespolowyAPI"
+"# ProjektZespolowyAPI" - API do zmieniania reguł dla systemu ekspertowego w projekcie zespołowym w firmie Comarch
 
 Get Reguły - zwraca json z wszystkimi regułami  
 http://localhost:8080/RestExample/resources/clips/rules  
