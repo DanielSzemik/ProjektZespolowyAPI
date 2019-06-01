@@ -28,19 +28,19 @@ public class RestService extends Application {
 	@Path("/rules")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public List<Rule> getRules() {
-		List<String> records = new ArrayList<String>();
 		List<Rule> rules = new ArrayList<Rule>();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(FILENAME));
 			String line;
 
-			while ((line = reader.readLine()) != null && line.startsWith("expert") == false) {
-				records.add(line);
-				String[] parts = line.split(",");
-				String[] parts1 =  parts[0].split("\\(");
-				int certainty = Integer.parseInt(parts[2].trim().replaceAll("[^0-9]", ""));
-				Rule rule = new Rule(parts1[0].trim(),parts[1].trim(),parts1[1].trim(),certainty);
-				rules.add(rule);
+			while ((line = reader.readLine()) != null) {
+				if(line.startsWith("expert") == false) {
+					String[] parts = line.split(",");
+					String[] parts1 =  parts[0].split("\\(");
+					int certainty = Integer.parseInt(parts[2].trim().replaceAll("[^0-9]", ""));
+					Rule rule = new Rule(parts1[0].trim(),parts[1].trim(),parts1[1].trim(),certainty);
+					rules.add(rule);
+				}
 			}
 			reader.close();
 		} catch (Exception e) {
