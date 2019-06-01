@@ -21,7 +21,7 @@ import javax.ws.rs.core.Application;
 @Path("/clips")
 @ApplicationPath("/resources")
 public class RestService extends Application {
-	static final String FILENAME = "winedemo.clp";
+	static final String FILENAME = "prolog.pl";
 
 	// http://localhost:8080/RestExample/resources/clips/rules
 	@GET
@@ -34,20 +34,13 @@ public class RestService extends Application {
 			BufferedReader reader = new BufferedReader(new FileReader(FILENAME));
 			String line;
 
-			while ((line = reader.readLine()).startsWith("(deffacts the-rules") == false) {
+			while ((line = reader.readLine()) != null && line.startsWith("expert") == false) {
 				records.add(line);
-			}
-			while ((line = reader.readLine()).startsWith(")") == false) {
-				if (line.trim().startsWith("(rule")) {
-					String atN1 = line.substring(line.indexOf("(if ") + 4, line.indexOf(" is ")).trim();
-					String at1 = line.substring(line.indexOf(" is ") + 4, line.indexOf(")")).trim();
-					line = reader.readLine();
-					String atN2 = line.substring(line.indexOf("(then ") + 6, line.indexOf(" is ")).trim();
-					String at2 = line.substring(line.indexOf(" is ") + 4, line.indexOf(" with ")).trim();
-					int certainty = Integer.parseInt(line.substring(line.indexOf(" certainty ") + 11, line.indexOf(" ))")).trim());
-					Rule rule1 = new Rule(atN1, at1, atN2, at2, certainty);
-					rules.add(rule1);
-				}
+				String[] parts = line.split(",");
+				String[] parts1 =  parts[0].split("\\(");
+				int certainty = Integer.parseInt(parts[2].trim().replaceAll("[^0-9]", ""));
+				Rule rule = new Rule(parts1[0].trim(),parts[1].trim(),parts1[1].trim(),certainty);
+				rules.add(rule);
 			}
 			reader.close();
 		} catch (Exception e) {
@@ -57,7 +50,7 @@ public class RestService extends Application {
 		}
 		return rules;
 	}
-
+	
 	@POST
 	@Path("/post")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -70,24 +63,18 @@ public class RestService extends Application {
 
 			while ((line = reader.readLine()) != null) {
 				records.add(line);
-				if (line.startsWith("(deffacts the-rules"))
-					n = records.size() +1;
 			}
 			reader.close();
 
 			FileWriter fileWriter = new FileWriter(FILENAME);
 			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 			for (int i = 0; i < records.size(); i++) {
-				if (i == n) {
-					bufferedWriter.write("  (rule     (if " + r.getAttrName1() + " is " + r.getAttr1() + " )");
-					bufferedWriter.newLine();
-					bufferedWriter.write("        (then " + r.getAttrName2() + " is " + r.getAttr2()
-							+ " with certainty " + r.getCertainty() + " ))");
-					bufferedWriter.newLine();
-				}
 				bufferedWriter.write(records.get(i));
 				bufferedWriter.newLine();
 			}
+			bufferedWriter.write(r.getPredicament() + "(" + r.getWord() + ", " + 
+					r.getName() + ", " + r.getCertainty() + ").");
+			
 			bufferedWriter.close();
 
 		} catch (Exception e) {
@@ -96,7 +83,8 @@ public class RestService extends Application {
 		}
 		return Response.ok().build();
 	}
-
+    
+	
 	@POST
 	@Path("/delete")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -105,38 +93,21 @@ public class RestService extends Application {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(FILENAME));
 			String line;
-			String line2;
 
-			while ((line = reader.readLine()).startsWith("(deffacts the-rules") == false) {
-				records.add(line);
-			}
-			records.add(line);
-			
-			while ((line = reader.readLine()).startsWith(")") == false) {
-				if (line.trim().startsWith("(rule")) {
-					String atN1 = line.substring(line.indexOf("(if ") + 4, line.indexOf(" is ")).trim();
-					String at1 = line.substring(line.indexOf(" is ") + 4, line.indexOf(")")).trim();
-					line2 = reader.readLine();
-					String atN2 = line2.substring(line2.indexOf("(then ") + 6, line2.indexOf(" is ")).trim();
-					String at2 = line2.substring(line2.indexOf(" is ") + 4, line2.indexOf(" with ")).trim();
-					int certainty = Integer.parseInt(line2.substring(line2.indexOf(" certainty ") + 11, line2.indexOf(" ))")).trim());
-					Rule rule = new Rule(atN1, at1, atN2, at2, certainty);
-					if (!rule.equals(r))
-					{
+			while ((line = reader.readLine()) != null) {
+				if (r.getPredicament().equals(line.substring(0, r.getPredicament().length()))) {
+					String[] parts = line.split(",");
+					String[] parts1 =  parts[0].split("\\(");
+					int certainty = Integer.parseInt(parts[2].trim().replaceAll("[^0-9]", ""));
+					Rule rule = new Rule(parts1[0].trim(),parts[1].trim(),parts1[1].trim(),certainty);
+					if (!rule.equals(r)) 
 						records.add(line);
-						records.add(line2);
-					}
 				}
 				else
 					records.add(line);
 			}
-			records.add(line);
-			
-			while ((line = reader.readLine()) != null) {
-				records.add(line);
-			}
 			reader.close();
-
+			
 			FileWriter fileWriter = new FileWriter(FILENAME);
 			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 			for (int i = 0; i < records.size(); i++) {

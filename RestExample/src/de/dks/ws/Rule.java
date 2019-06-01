@@ -4,64 +4,56 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Rule{
-	private String attrName1;
-	String attr1;
-	String attrName2;
-	String attr2;
+	String name;
+	String word;
+	String predicament;
 	int certainty;
 	
 	public Rule() {
 		
 	}
 	
-	public Rule(String attrName1, String attr1, String attrName2, String attr2, int certainty) {
-		this.attrName1 = attrName1;
-		this.attr1 = attr1;
-		this.attrName2 = attrName2;
-		this.attr2 = attr2;
+	public Rule(String predicament, String name, String word, int certainty) {
+		this.predicament = predicament;
+		this.name = name;
+		this.word = word;
 		this.certainty = certainty;
 	}
 	
-	public String getAttr1() {
-		return attr1;
+	public String getPredicament() {
+		return predicament;
 	}
 
-	public void setAttr1(String attr1) {
-		this.attr1 = attr1;
+	public void setPredicament(String predicament) {
+		this.predicament = predicament;
+	}
+	
+
+	public String getName() {
+		return name;
 	}
 
-	public String getAttrName2() {
-		return attrName2;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public void setAttrName2(String attrName2) {
-		this.attrName2 = attrName2;
+	public String getWord() {
+		return word;
 	}
 
-	public String getAttr2() {
-		return attr2;
+	public void setWord(String word) {
+		this.word = word;
 	}
 
 	public int getCertainty() {
 		return certainty;
 	}
-
+	
 	public void setCertainty(int certainty) {
 		this.certainty = certainty;
 	}
 
-	public void setAttr2(String attr2) {
-		this.attr2 = attr2;
-	}
 
-	public String getAttrName1(){
-		return attrName1;
-	}
-	
-	public void setAttrName1(String attrName1) {
-		this.attrName1 = attrName1;
-
-	}
 	
     @Override
     public boolean equals(Object o) { 
@@ -79,16 +71,14 @@ public class Rule{
         Rule c = (Rule) o; 
           
         // Compare the data members and return accordingly  
-        return attr1.equals(c.attr1) 
-                && attr2.equals(c.attr2) 
-                && attrName1.equals(c.attrName1) 
-                && attrName2.equals(c.attrName2) 
-                && certainty == c.certainty;
+        return word.equals(c.word) 
+                && name.equals(c.name) 
+                && certainty == c.certainty
+                && predicament.equals(c.predicament);
+        		
     } 
-
 	@Override
 	public String toString() {
-		return "Rule [attrName1=" + attrName1 + "]";
+		return ("name = " + name + ", word = " + word + ", predicament = " + predicament + ", certainty = " + certainty);
 	}
-	
 }
